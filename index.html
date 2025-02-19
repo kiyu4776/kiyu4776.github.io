@@ -70,7 +70,12 @@
         }
         function collision() {
             return tetromino.some((row, y) => row.some((cell, x) => {
-                return cell && (board[posY + y]?.[posX + x] || posY + y >= ROWS);
+                return cell && (
+                    board[posY + y]?.[posX + x] || 
+                    posY + y >= ROWS ||
+                    posX + x < 0 ||
+                    posX + x >= COLUMNS
+                );
             }));
         }
         function update() {
@@ -80,8 +85,14 @@
             setTimeout(update, 500);
         }
         document.addEventListener("keydown", (e) => {
-            if (e.key === "ArrowLeft") posX--;
-            if (e.key === "ArrowRight") posX++;
+            if (e.key === "ArrowLeft") {
+                posX--;
+                if (collision()) posX++;
+            }
+            if (e.key === "ArrowRight") {
+                posX++;
+                if (collision()) posX--;
+            }
             if (e.key === "ArrowDown") moveDown();
         });
         tetromino = tetrominos[Math.floor(Math.random() * tetrominos.length)];
