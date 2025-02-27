@@ -3,370 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>スマホ対応テトリス（ホールド機能付き）</title>
+    <title>皇太子ボタンV0.8</title>
     <style>
         body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background: #000;
+            font-family: 'Yu Mincho', serif;
+            background-color: #d0b0ff;
+            color: #333;
+            text-align: center;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            background-color: #800080;
             color: white;
-            font-family: Arial, sans-serif;
-        }
-        canvas {
-            background: #111;
-            display: block;
-            touch-action: none;
-        }
-        .controls {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 10px;
-            max-width: 300px;
-        }
-        button {
-            font-size: 20px;
-            margin: 5px;
-            padding: 10px 20px;
-            width: 60px;
-            height: 60px;
-            background: #444;
-            color: white;
-            border: none;
+            padding: 10px;
             border-radius: 5px;
         }
-        .hold-box, .next-box {
-            position: absolute;
-            width: 100px;
-            height: 100px;
-            background: #222;
-            border: 2px solid #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+
+        .section {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 5px;
         }
-        .hold-box {
-            top: 10px;
-            left: 10px;
+
+        .profile {
+            text-align: left;
+            padding: 10px;
         }
-        .next-box {
-            top: 10px;
-            right: 10px;
+
+        .profile h2 {
+            text-align: center;
         }
-        .score {
-            font-size: 24px;
-            margin-top: 20px;
+
+        input[type="text"] {
+            padding: 15px;
+            width: 50%;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            margin: 5px 0;
         }
-        @media (max-width: 600px) {
-            .hold-box, .next-box {
-                width: 80px;
-                height: 80px;
-            }
+
+        button {
+            background-color: royalblue;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: darkblue;
         }
     </style>
+    <script>
+        function sendEmail() {
+            const email = document.getElementById('email').value;
+            fetch('/send-email', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email: email }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('メールが送信されました！');
+            })
+            .catch((error) => {
+                console.error('エラー:', error);
+            });
+        }
+    </script>
 </head>
 <body>
-    <canvas id="tetris" width="300" height="600"></canvas>
-    <div class="hold-box">
-        <canvas id="holdCanvas" width="80" height="80"></canvas>
+
+    <div class="container">
+        <h1>皇太子様のためのホームページ</h1>
+        
+        <div class="section">
+            <h2>おめでとうございます！</h2>
+            <p>あなたが121代天皇（予定）となる皇太子候補に選ばれました！</p>
+            <p>皇太子になるには、下にあるフォームにメールアドレスを入れて、<br>立太子ボタンを押してください。</p>
+            <input type="text" id="email" placeholder="メールアドレスを入力してください">
+            <br>
+            <button onclick="sendEmail()">立太子</button>
+        </div>
+
+        <div class="section profile">
+            <h2>茶々子様ギャラリー</h2>
+            <p><strong>御名:</strong> 熊野宮茶々子内親王殿下</p>
+            <p><strong>年齢:</strong> 20</p>
+            <p><strong>職業:</strong> 女子大生・皇女</p>
+            <p><strong>3サイズ:</strong> 94/58/82(Eカップ)</p>
+            <p><strong>趣味:</strong> アドバンスドコートリーダー、バイオリン、コスプレ</p>
+            <p><strong>尊敬する人:</strong> 天皇陛下、大延（熊沢）天皇、尊信天皇</p>
+            <p><strong>御本人からのメッセージ:</strong><br>こんにちは。茶々子です。今、熊野宮正統王朝はとてもピンチな んです。<br>だけど貴方が皇太子様になってくれれば、神武以来 120代に渡って存続してきた血が途絶える事も無くなります。<br>だ から、茶々子と結婚して皇太子様になってほしいな。。。<br>もし貴 方が皇太子様になってくれたら、茶々子は貴方のために一生懸命 御奉仕します。<br>パイズリでたくさん気持ちよくさせてあげます ね。<br>あと気が向いたらで構わないので、生で中出ししてくれる と嬉しいな。。。<br>そして貴方の子供を生んで、立派な次々代の帝 に育て上げたいと思ってるの。<br>千代田城の種無し一族なんかと 違って、あなたはその濃い精液で私を一発孕ませしてくれますよ
+
+ね?楽しみに待ってます♪</p>
+        </div>
+         </div>
     </div>
-    <div class="next-box">
-        <canvas id="nextCanvas" width="80" height="80"></canvas>
-    </div>
-    <div class="controls">
-        <button onclick="move(-1, 0)">←</button>
-        <button onclick="rotateRight()">↻</button>
-        <button onclick="rotateLeft()">↺</button>
-        <button onclick="move(1, 0)">→</button>
-        <button onclick="softDrop()">↓</button>
-        <button onclick="hardDrop()">↑</button>
-        <button onclick="hold()">H</button>
-    </div>
-    <div class="score">
-        <span id="scoreDisplay">スコア: 0</span>
-    </div>
 
-    <script>
-        const canvas = document.getElementById("tetris");
-        const ctx = canvas.getContext("2d");
-        const holdCanvas = document.getElementById("holdCanvas");
-        const holdCtx = holdCanvas.getContext("2d");
-        const nextCanvas = document.getElementById("nextCanvas");
-        const nextCtx = nextCanvas.getContext("2d");
-        const scoreDisplay = document.getElementById("scoreDisplay");
-
-        const ROWS = 20, COLS = 10, BLOCK_SIZE = 30;
-        let field = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
-        let holdPiece = null;
-        let canHold = true;
-        let score = 0;  // スコア
-
-        const TETROMINOES = [
-            { shape: [[1, 1, 1, 1]], color: "cyan", type: "I" }, 
-            { shape: [[1, 1], [1, 1]], color: "yellow", type: "O" }, 
-            { shape: [[0, 1, 1], [1, 1, 0]], color: "green", type: "S" }, 
-            { shape: [[1, 1, 0], [0, 1, 1]], color: "red", type: "Z" }, 
-            { shape: [[1, 0, 0], [1, 1, 1]], color: "orange", type: "L" }, 
-            { shape: [[0, 0, 1], [1, 1, 1]], color: "blue", type: "J" }, 
-            { shape: [[0, 1, 0], [1, 1, 1]], color: "purple", type: "T" }, 
-        ];
-
-        let pieceQueue = [];
-        function generatePieceQueue() {
-            pieceQueue = [...TETROMINOES].sort(() => Math.random() - 0.5);
-            pieceQueue = pieceQueue.concat([...TETROMINOES].sort(() => Math.random() - 0.5));
-        }
-
-        generatePieceQueue();
-        let currentPiece = { ...pieceQueue.shift(), x: 3, y: 0 };
-
-        let dropSpeed = 1000;
-        let lastDrop = Date.now();
-
-        function drawBlock(ctx, x, y, size, color) {
-            ctx.fillStyle = color;
-            ctx.fillRect(x * size, y * size, size, size);
-            ctx.strokeStyle = "#000";
-            ctx.strokeRect(x * size, y * size, size, size);
-        }
-
-        function drawGrid() {
-            ctx.strokeStyle = "#333";
-            for (let y = 0; y < ROWS; y++) {
-                for (let x = 0; x < COLS; x++) {
-                    ctx.strokeRect(x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
-                }
-            }
-        }
-
-        function draw() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            drawGrid();
-            for (let y = 0; y < ROWS; y++) {
-                for (let x = 0; x < COLS; x++) {
-                    if (field[y][x]) {
-                        drawBlock(ctx, x, y, BLOCK_SIZE, field[y][x]);
-                    }
-                }
-            }
-            currentPiece.shape.forEach((row, dy) => {
-                row.forEach((value, dx) => {
-                    if (value) {
-                        drawBlock(ctx, currentPiece.x + dx, currentPiece.y + dy, BLOCK_SIZE, currentPiece.color);
-                    }
-                });
-            });
-            drawHoldPiece();
-            drawNextPiece();
-            scoreDisplay.innerText = `スコア: ${score}`;
-        }
-
-        function drawHoldPiece() {
-            holdCtx.clearRect(0, 0, holdCanvas.width, holdCanvas.height);
-            if (!holdPiece) return;
-            const size = 15;
-            holdPiece.shape.forEach((row, dy) => {
-                row.forEach((value, dx) => {
-                    if (value) {
-                        drawBlock(holdCtx, dx + 1, dy + 1, size, holdPiece.color);
-                    }
-                });
-            });
-        }
-
-        function drawNextPiece() {
-            nextCtx.clearRect(0, 0, nextCanvas.width, nextCanvas.height);
-            if (pieceQueue.length > 0) {
-                const nextPiece = pieceQueue[0];
-                const size = 15;
-                nextPiece.shape.forEach((row, dy) => {
-                    row.forEach((value, dx) => {
-                        if (value) {
-                            drawBlock(nextCtx, dx + 1, dy + 1, size, nextPiece.color);
-                        }
-                    });
-                });
-            }
-        }
-
-        function move(dx, dy) {
-            currentPiece.x += dx;
-            currentPiece.y += dy;
-            if (collision()) {
-                currentPiece.x -= dx;
-                currentPiece.y -= dy;
-            }
-            draw();
-        }
-
-        function rotateRight() {
-            const rotated = currentPiece.shape[0].map((_, i) =>
-                currentPiece.shape.map(row => row[i]).reverse()
-            );
-            const backupShape = currentPiece.shape;
-            currentPiece.shape = rotated;
-            if (collision()) {
-                currentPiece.shape = backupShape;
-            }
-            draw();
-        }
-
-        function rotateLeft() {
-            const rotated = currentPiece.shape[0].map((_, i) =>
-                currentPiece.shape.map(row => row[i])
-            ).reverse();
-            const backupShape = currentPiece.shape;
-            currentPiece.shape = rotated;
-            if (collision()) {
-                currentPiece.shape = backupShape;
-            }
-            draw();
-        }
-
-        function mergePiece() {
-            currentPiece.shape.forEach((row, dy) => {
-                row.forEach((value, dx) => {
-                    if (value) {
-                        field[currentPiece.y + dy][currentPiece.x + dx] = currentPiece.color;
-                    }
-                });
-            });
-        }
-
-        function clearLines() {
-            let linesCleared = 0;
-            field = field.filter(row => row.some(cell => cell === 0));
-            while (field.length < ROWS) {
-                field.unshift(Array(COLS).fill(0));
-            }
-
-            // ラインが埋まっている行を削除し、スコアを更新
-            for (let y = 0; y < ROWS; y++) {
-                if (field[y].every(cell => cell !== 0)) {
-                    linesCleared++;
-                    field.splice(y, 1);
-                    field.unshift(Array(COLS).fill(0));
-                }
-            }
-
-            if (linesCleared > 0) {
-                score += linesCleared * 100;  // ラインを消した数に応じてスコアを加算
-            }
-        }
-
-        function drop() {
-            currentPiece.y++;
-            if (collision()) {
-                currentPiece.y--;
-                mergePiece();
-                clearLines();
-                canHold = true;
-                if (pieceQueue.length === 0) generatePieceQueue();
-                currentPiece = { ...pieceQueue.shift(), x: 3, y: 0 };
-                if (collision()) {
-                    alert("ゲームオーバー");
-                    field = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
-                    generatePieceQueue();
-                }
-            }
-            draw();
-        }
-
-        function softDrop() {
-            currentPiece.y++;
-            if (collision()) {
-                currentPiece.y--;
-                mergePiece();
-                clearLines();
-                canHold = true;
-                if (pieceQueue.length === 0) generatePieceQueue();
-                currentPiece = { ...pieceQueue.shift(), x: 3, y: 0 };
-                if (collision()) {
-                    alert("ゲームオーバー");
-                    field = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
-                    generatePieceQueue();
-                }
-            }
-            draw();
-        }
-
-        function hardDrop() {
-            while (!collision()) {
-                currentPiece.y++;
-            }
-            currentPiece.y--;
-            mergePiece();
-            clearLines();
-            canHold = true;
-            if (pieceQueue.length === 0) generatePieceQueue();
-            currentPiece = { ...pieceQueue.shift(), x: 3, y: 0 };
-            if (collision()) {
-                alert("ゲームオーバー");
-                field = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
-                generatePieceQueue();
-            }
-            draw();
-        }
-
-        function hold() {
-            if (canHold) {
-                if (holdPiece === null) {
-                    holdPiece = { ...currentPiece };
-                    currentPiece = { ...pieceQueue.shift(), x: 3, y: 0 };
-                } else {
-                    const temp = holdPiece;
-                    holdPiece = { ...currentPiece };
-                    currentPiece = { ...temp, x: 3, y: 0 };
-                }
-                canHold = false;
-                draw();
-            }
-        }
-
-        function collision() {
-            return currentPiece.shape.some((row, dy) => {
-                return row.some((value, dx) => {
-                    if (value) {
-                        const x = currentPiece.x + dx;
-                        const y = currentPiece.y + dy;
-                        return x < 0 || x >= COLS || y >= ROWS || field[y][x];
-                    }
-                    return false;
-                });
-            });
-        }
-
-        function gameLoop() {
-            const now = Date.now();
-            if (now - lastDrop > dropSpeed) {
-                drop();
-                lastDrop = now;
-            }
-            requestAnimationFrame(gameLoop);
-        }
-
-        window.addEventListener("keydown", e => {
-            switch (e.key) {
-                case "ArrowLeft":
-                    move(-1, 0);
-                    break;
-                case "ArrowRight":
-                    move(1, 0);
-                    break;
-                case "ArrowDown":
-                    softDrop();
-                    break;
-                case "ArrowUp":
-                    rotateRight();
-                    break;
-                case " ":
-                    hardDrop();
-                    break;
-            }
-        });
-
-        gameLoop();
-    </script>
 </body>
+</html>
 </html>
