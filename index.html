@@ -3,39 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZIPファイルダウンロード</title>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 50px;
-        }
-        #loading {
-            display: none;
-            font-size: 18px;
-            color: #555;
-        }
-        #download {
-            display: none;
-            margin-top: 20px;
-        }
-        #footer {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            color: gray;
-            font-size: 14px;
-        }
-        #error, #fileError {
-            color: red;
-            display: none;
-        }
-        #preview {
-            margin-top: 10px;
-            max-width: 300px;
-            display: none;
-        }
+        body { font-family: Arial, sans-serif; text-align: center; margin: 50px; }
+        #loading { display: none; font-size: 18px; color: #555; }
+        #download { display: none; margin-top: 20px; }
+        #footer { position: fixed; bottom: 10px; right: 10px; color: gray; font-size: 14px; }
+#footer2 { position: fixed; bottom: 35px; right: 5px; color: gray; font-size: 12px; }
+        #error, #fileError { color: red; display: none; }
+        #preview { margin-top: 10px; max-width: 300px; display: none; }
     </style>
 </head>
 <body>
@@ -51,107 +28,117 @@
     <button onclick="validate()">確認</button>
 
     <p id="error">IDの形式が正しくありません</p>
-    <p id="loading">ロード中... しばらくお待ちください</p>
+    <p id="loading">読み込み中... しばらくお待ちください</p>
 
     <div id="download">
-        <a id="downloadLink" download="randomized.zip">ZIPをダウンロード</a>
+        <a id="downloadLink" download="randomized.zip">ダウンロード</a>
     </div>
 
     <div id="footer">@kiyu47764</div>
+    <div id="footer2">写真はサーバーに保存されません。</div>
 
     <script>
         function validate() {
-            const userId = document.getElementById("userId").value;
-            const regex = /^[A-Za-z]{2}\d{6}$/; // 英字2文字 + 数字6文字
-            const errorMsg = document.getElementById("error");
-            const fileInput = document.getElementById("imageUpload");
-            const fileError = document.getElementById("fileError");
-            const loading = document.getElementById("loading");
-            const download = document.getElementById("download");
-            const downloadLink = document.getElementById("downloadLink");
+            const a = document.getElementById("userId").value;
+            const b = /^[A-Za-z]{2}\d{6}$/;
+            const c = document.getElementById("error");
+            const d = document.getElementById("imageUpload");
+            const e = document.getElementById("fileError");
+            const f = document.getElementById("loading");
+            const g = document.getElementById("download");
 
-            let valid = true;
+            let h = true;
 
-            // IDチェック
-            if (!regex.test(userId)) {
-                errorMsg.style.display = "block";
-                valid = false;
+            if (!b.test(a)) {
+                c.style.display = "block";
+                h = false;
             } else {
-                errorMsg.style.display = "none";
+                c.style.display = "none";
             }
 
-            // PNG画像チェック
-            if (!fileInput.files.length || !fileInput.files[0].name.toLowerCase().endsWith(".png")) {
-                fileError.style.display = "block";
-                valid = false;
+            if (!d.files.length || !d.files[0].name.toLowerCase().endsWith(".png")) {
+                e.style.display = "block";
+                h = false;
             } else {
-                fileError.style.display = "none";
+                e.style.display = "none";
             }
 
-            if (!valid) return;
+            if (!h) return;
 
-            // ロード開始
-            loading.style.display = "block";
-            download.style.display = "none";
+            f.style.display = "block";
+            g.style.display = "none";
 
-            const waitTime = Math.floor(Math.random() * 6) + 5; // 5〜10秒待機
-            setTimeout(() => {
-                createZip(userId, fileInput.files[0]);
-            }, waitTime * 1000);
+            const i = Math.floor(Math.random() * 6) + 5;
+            setTimeout(() => { createZip(a, d.files[0]); }, i * 1000);
         }
 
-        // IDを元に乱数化
-        function createZip(userId, imageFile) {
-            let seed = 0;
-            for (let i = 0; i < userId.length; i++) {
-                seed += userId.charCodeAt(i) * (i + 1);
+        function createZip(a, b) {
+            let c = 0;
+            for (let d = 0; d < a.length; d++) {
+                c += a.charCodeAt(d) * (d + 1);
             }
 
-            function random(seed) {
-                let x = Math.sin(seed) * 10000;
-                return x - Math.floor(x);
+            function e(f) {
+                let g = Math.sin(f) * 10000;
+                return g - Math.floor(g);
             }
 
-            let randomText = "";
-            for (let i = 0; i < 100; i++) {
-                randomText += String.fromCharCode(65 + Math.floor(random(seed + i) * 26));
-            }
+            const f = new JSZip();
 
-            const zip = new JSZip();
-            zip.file("random.txt", randomText);
+            setTimeout(() => {
+                document.getElementById("loading").textContent = "写真を読み込み中(1〜1.5秒)";
+            }, Math.random() * (1.5 - 1) + 1 * 1000);
 
-            // 画像をZIPに追加
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                zip.file("image.png", e.target.result.split(',')[1], { base64: true });
+            setTimeout(() => {
+                document.getElementById("loading").textContent = "互換性を確認中(0.2〜0.5秒)";
+            }, Math.random() * (0.5 - 0.2) + 0.2 * 1000);
 
-                zip.generateAsync({ type: "blob" }).then(function (blob) {
-                    const url = URL.createObjectURL(blob);
-                    document.getElementById("downloadLink").href = url;
+            setTimeout(() => {
+                document.getElementById("loading").textContent = "patchを適応中(1.5〜3秒)";
+            }, Math.random() * (1.5 - 1) + 1.5 * 1000);
+
+            setTimeout(() => {
+                document.getElementById("loading").textContent = "完了！";
+            }, Math.random() * (3 - 1.5) + 1.5 * 1000);
+
+            const g = new FileReader();
+            g.onload = function(h) {
+                let i = new Uint8Array(h.target.result);
+
+                for (let j = 0; j < i.length; j++) {
+                    i[j] = i[j] ^ Math.floor(e(c + j) * 255);
+                }
+
+                const k = new TextDecoder().decode(i);
+                f.file("randomized.txt", k);
+                f.file("original_image.png", b);
+
+                f.generateAsync({ type: "blob" }).then(function (l) {
+                    const m = URL.createObjectURL(l);
+                    document.getElementById("downloadLink").href = m;
                     document.getElementById("loading").style.display = "none";
                     document.getElementById("download").style.display = "block";
                 });
             };
-            reader.readAsDataURL(imageFile);
+            g.readAsArrayBuffer(b);
         }
 
-        // 画像プレビュー
-        document.getElementById("imageUpload").addEventListener("change", function(event) {
-            const file = event.target.files[0];
-            const preview = document.getElementById("preview");
-            const fileError = document.getElementById("fileError");
+        document.getElementById("imageUpload").addEventListener("change", function(a) {
+            const b = a.target.files[0];
+            const c = document.getElementById("preview");
+            const d = document.getElementById("fileError");
 
-            if (file && file.type === "image/png") {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    preview.src = e.target.result;
-                    preview.style.display = "block";
+            if (b && b.type === "image/png") {
+                const e = new FileReader();
+                e.onload = function(f) {
+                    c.src = f.target.result;
+                    c.style.display = "block";
                 };
-                reader.readAsDataURL(file);
-                fileError.style.display = "none";
+                e.readAsDataURL(b);
+                d.style.display = "none";
             } else {
-                preview.style.display = "none";
-                fileError.style.display = "block";
+                c.style.display = "none";
+                d.style.display = "block";
             }
         });
     </script>
