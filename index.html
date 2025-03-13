@@ -3,118 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>皇太子ボタンV0.8</title>
+    <title>ZIPファイルダウンロード</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
         body {
-            font-family: 'Yu Mincho', serif;
-            background-color: #d0b0ff;
-            color: #333;
+            font-family: Arial, sans-serif;
             text-align: center;
+            margin: 50px;
         }
-
-        .container {
-            width: 80%;
-            margin: 0 auto;
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        #loading {
+            display: none;
+            font-size: 18px;
+            color: #555;
         }
-
-        h1 {
-            background-color: #800080;
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
+        #download {
+            display: none;
+            margin-top: 20px;
         }
-
-        .section {
-            margin: 20px 0;
-            padding: 10px;
-            background-color: #f9f9f9;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+        #footer {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            color: gray;
+            font-size: 14px;
         }
-
-        .profile {
-            text-align: left;
-            padding: 10px;
+        #error, #fileError {
+            color: red;
+            display: none;
         }
-
-        .profile h2 {
-            text-align: center;
-        }
-
-        input[type="text"] {
-            padding: 15px;
-            width: 50%;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            margin: 5px 0;
-        }
-
-        button {
-            background-color: royalblue;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: darkblue;
+        #preview {
+            margin-top: 10px;
+            max-width: 300px;
+            display: none;
         }
     </style>
-    <script>
-        function sendEmail() {
-            const email = document.getElementById('email').value;
-            fetch('/send-email', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email: email }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                alert('メールが送信されました！');
-            })
-            .catch((error) => {
-                console.error('エラー:', error);
-            });
-        }
-    </script>
 </head>
 <body>
 
-    <div class="container">
-        <h1>皇太子様のためのホームページ</h1>
-        
-        <div class="section">
-            <h2>おめでとうございます！</h2>
-            <p>あなたが121代天皇（予定）となる皇太子候補に選ばれました！</p>
-            <p>皇太子になるには、下にあるフォームにメールアドレスを入れて、<br>立太子ボタンを押してください。</p>
-            <input type="text" id="email" placeholder="メールアドレスを入力してください">
-            <br>
-            <button onclick="sendEmail()">立太子</button>
-        </div>
+    <h2>IDを入力してください</h2>
+    <input type="text" id="userId" placeholder="AB123456"><br><br>
 
-        <div class="section profile">
-            <h2>茶々子様ギャラリー</h2>
-            <p><strong>御名:</strong> 熊野宮茶々子内親王殿下</p>
-            <p><strong>年齢:</strong> 20</p>
-            <p><strong>職業:</strong> 女子大生・皇女</p>
-            <p><strong>3サイズ:</strong> 94/58/82(Eカップ)</p>
-            <p><strong>趣味:</strong> アドバンスドコートリーダー、バイオリン、コスプレ</p>
-            <p><strong>尊敬する人:</strong> 天皇陛下、大延（熊沢）天皇、尊信天皇</p>
-            <p><strong>御本人からのメッセージ:</strong><br>こんにちは。茶々子です。今、熊野宮正統王朝はとてもピンチな んです。<br>だけど貴方が皇太子様になってくれれば、神武以来 120代に渡って存続してきた血が途絶える事も無くなります。<br>だ から、茶々子と結婚して皇太子様になってほしいな。。。<br>もし貴 方が皇太子様になってくれたら、茶々子は貴方のために一生懸命 御奉仕します。<br>パイズリでたくさん気持ちよくさせてあげます ね。<br>あと気が向いたらで構わないので、生で中出ししてくれる と嬉しいな。。。<br>そして貴方の子供を生んで、立派な次々代の帝 に育て上げたいと思ってるの。<br>千代田城の種無し一族なんかと 違って、あなたはその濃い精液で私を一発孕ませしてくれますよ
+    <h3>画像を選択（PNGのみ）</h3>
+    <input type="file" id="imageUpload" accept=".png"><br>
+    <p id="fileError">PNGファイルを選択してください</p>
+    <img id="preview" alt="画像プレビュー"><br><br>
 
-ね?楽しみに待ってます♪</p>
-        </div>
-         </div>
+    <button onclick="validate()">確認</button>
+
+    <p id="error">IDの形式が正しくありません</p>
+    <p id="loading">ロード中... しばらくお待ちください</p>
+
+    <div id="download">
+        <a id="downloadLink" download="randomized.zip">ZIPをダウンロード</a>
     </div>
+
+    <div id="footer">@kiyu47764</div>
+
+    <script>
+        function validate() {
+            const userId = document.getElementById("userId").value;
+            const regex = /^[A-Za-z]{2}\d{6}$/; // 英字2文字 + 数字6文字
+            const errorMsg = document.getElementById("error");
+            const fileInput = document.getElementById("imageUpload");
+            const fileError = document.getElementById("fileError");
+            const loading = document.getElementById("loading");
+            const download = document.getElementById("download");
+            const downloadLink = document.getElementById("downloadLink");
+
+            let valid = true;
+
+            // IDチェック
+            if (!regex.test(userId)) {
+                errorMsg.style.display = "block";
+                valid = false;
+            } else {
+                errorMsg.style.display = "none";
+            }
+
+            // PNG画像チェック
+            if (!fileInput.files.length || !fileInput.files[0].name.toLowerCase().endsWith(".png")) {
+                fileError.style.display = "block";
+                valid = false;
+            } else {
+                fileError.style.display = "none";
+            }
+
+            if (!valid) return;
+
+            // ロード開始
+            loading.style.display = "block";
+            download.style.display = "none";
+
+            const waitTime = Math.floor(Math.random() * 6) + 5; // 5〜10秒待機
+            setTimeout(() => {
+                createZip(userId, fileInput.files[0]);
+            }, waitTime * 1000);
+        }
+
+        // IDを元に乱数化
+        function createZip(userId, imageFile) {
+            let seed = 0;
+            for (let i = 0; i < userId.length; i++) {
+                seed += userId.charCodeAt(i) * (i + 1);
+            }
+
+            function random(seed) {
+                let x = Math.sin(seed) * 10000;
+                return x - Math.floor(x);
+            }
+
+            let randomText = "";
+            for (let i = 0; i < 100; i++) {
+                randomText += String.fromCharCode(65 + Math.floor(random(seed + i) * 26));
+            }
+
+            const zip = new JSZip();
+            zip.file("random.txt", randomText);
+
+            // 画像をZIPに追加
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                zip.file("image.png", e.target.result.split(',')[1], { base64: true });
+
+                zip.generateAsync({ type: "blob" }).then(function (blob) {
+                    const url = URL.createObjectURL(blob);
+                    document.getElementById("downloadLink").href = url;
+                    document.getElementById("loading").style.display = "none";
+                    document.getElementById("download").style.display = "block";
+                });
+            };
+            reader.readAsDataURL(imageFile);
+        }
+
+        // 画像プレビュー
+        document.getElementById("imageUpload").addEventListener("change", function(event) {
+            const file = event.target.files[0];
+            const preview = document.getElementById("preview");
+            const fileError = document.getElementById("fileError");
+
+            if (file && file.type === "image/png") {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = "block";
+                };
+                reader.readAsDataURL(file);
+                fileError.style.display = "none";
+            } else {
+                preview.style.display = "none";
+                fileError.style.display = "block";
+            }
+        });
+    </script>
 
 </body>
 </html>
